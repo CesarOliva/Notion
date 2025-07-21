@@ -7,8 +7,8 @@ const MarketingLayout = ({
 }) => {
     return (
         <div className="h-full">
+            <Navbar/>
             <main className="h-full pt-40">
-                <Navbar/>
                 {children}
             </main>
         </div>
