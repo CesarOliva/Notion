@@ -1,14 +1,14 @@
 "use client"
-import { useScrollTop } from "@/hooks/use-scroll-top";
 import { useConvexAuth } from "convex/react";
+import { useScrollTop } from "@/hooks/use-scroll-top";
 
-import { cn } from "@/lib/utils";
 import Logo from "./logo";
-import { ModeToggle } from "@/components/mode-toggle";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
-import { Link } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
     const {isAuthenticated, isLoading} = useConvexAuth();
@@ -37,7 +37,7 @@ const Navbar = () => {
                 {isAuthenticated && !isLoading &&(
                     <>
                         <Button variant="ghost" size="sm" asChild>
-                            <a href="/documents">Enter Notion</a>
+                            <Link href="/documents">Enter Notion</Link>
                         </Button>
                         <UserButton afterSignOutUrl="/"/>
                     </>
