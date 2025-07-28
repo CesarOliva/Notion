@@ -12,6 +12,8 @@ import Item from "./Item";
 import { toast } from "sonner";
 import DocumentList from "./document-list";
 import {Popover, PopoverTrigger, PopoverContent} from "@/components/ui/popover"
+import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
 import TrashBox from "./trash-box";
 
 const Navigation = () => {
@@ -19,6 +21,8 @@ const Navigation = () => {
     const isMobile = useMediaQuery("(max-width: 768px)")
 
     const create = useMutation(api.documents.create)
+    const search = useSearch();
+    const settings = useSettings();
 
     const isResizingRef = useRef(false)
     const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -129,8 +133,8 @@ const Navigation = () => {
                 </div>
                 <div>
                     <UserItem/>
-                    <Item label="Search" icon={Search} isSearch onClick={()=>{}}/>
-                    <Item label="Settings" icon={Settings}onClick={()=>{}}/>
+                    <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
+                    <Item label="Settings" icon={Settings}onClick={settings.onOpen}/>
                     <Item onClick={handleCreate} label="New Page" icon={PlusCircle}/>
                 </div>
                 <div className="mt-4">
