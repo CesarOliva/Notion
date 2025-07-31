@@ -1,13 +1,43 @@
 "use client";
 
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader
-} from "@/components/ui/dialog"
+import {Dialog, DialogContent, DialogHeader} from "@/components/ui/dialog"
 import { useCoverImage } from "@/hooks/use-cover-image";
+import { SingleImageDropzone } from "@/components/single-image-dropzone";
+import React, { useState } from "react";
+import { useEdgeStore } from "@/lib/edgestore";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useParams } from "next/navigation";
+import { Id } from "@/convex/_generated/dataModel";
+import { UploaderProvider, UploadFn } from "../upload/uploader-provider";
 
 export const CoverImageModal = () => {
+    const params = useParams();
+    const [file, setFile] = useState<File>();
+    const [isSubmiting, setIsSubmiting] = useState(false);
+
+    const { edgestore }  = useEdgeStore();
+
+    const update = useMutation(api.documents.update);
+
+    const uploadFn: UploadFn = React.useCallback(
+        async ({ file, onProgressChange, signal }) => {
+            const res = await edgestore.publicFiles.upload({
+                file,
+                signal,
+                onProgressChange,
+            });
+
+            await update({
+                id: params.documentId as Id<"documents">,
+                coverImage: res.url
+            })
+            coverImage.onClose();
+            return res;
+        },
+        [edgestore],
+    );
+
     const coverImage = useCoverImage();
     return (
         <Dialog open={coverImage.isOpen} onOpenChange={coverImage.onClose}>
@@ -15,9 +45,9 @@ export const CoverImageModal = () => {
                 <DialogHeader>
                     <h2 className="text-center text-lg font-semibold">Cover image</h2>
                 </DialogHeader>
-                <div>
-                    TODO: Upload image
-                </div>
+                <UploaderProvider uploadFn={uploadFn} autoUpload>
+                    <SingleImageDropzone className="w-full outline-none" disabled={isSubmiting}/>
+                </UploaderProvider>
             </DialogContent>
         </Dialog>
     );
