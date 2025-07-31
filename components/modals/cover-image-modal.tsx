@@ -13,10 +13,8 @@ import { UploaderProvider, UploadFn } from "../upload/uploader-provider";
 
 export const CoverImageModal = () => {
     const params = useParams();
-    const [file, setFile] = useState<File>();
-    const [isSubmiting, setIsSubmiting] = useState(false);
-
     const { edgestore }  = useEdgeStore();
+    const coverImage = useCoverImage();
 
     const update = useMutation(api.documents.update);
 
@@ -31,14 +29,14 @@ export const CoverImageModal = () => {
             await update({
                 id: params.documentId as Id<"documents">,
                 coverImage: res.url
-            })
+            });
+            
             coverImage.onClose();
             return res;
         },
-        [edgestore],
+        [edgestore, params.documentId, update, coverImage] // Añade todas las dependencias necesarias
     );
 
-    const coverImage = useCoverImage();
     return (
         <Dialog open={coverImage.isOpen} onOpenChange={coverImage.onClose}>
             <DialogContent>
@@ -46,7 +44,7 @@ export const CoverImageModal = () => {
                     <h2 className="text-center text-lg font-semibold">Cover image</h2>
                 </DialogHeader>
                 <UploaderProvider uploadFn={uploadFn} autoUpload>
-                    <SingleImageDropzone className="w-full outline-none" disabled={isSubmiting}/>
+                    <SingleImageDropzone className="w-full outline-none"/>
                 </UploaderProvider>
             </DialogContent>
         </Dialog>
