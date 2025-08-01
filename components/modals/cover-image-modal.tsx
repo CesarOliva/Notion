@@ -21,9 +21,10 @@ export const CoverImageModal = () => {
     const uploadFn: UploadFn = React.useCallback(
         async ({ file, onProgressChange, signal }) => {
             const res = await edgestore.publicFiles.upload({
-                file,
-                signal,
-                onProgressChange,
+                file, 
+                options: {
+                    replaceTargetUrl: coverImage.url
+                }
             });
 
             await update({
