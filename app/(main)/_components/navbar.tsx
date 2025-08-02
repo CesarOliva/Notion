@@ -47,11 +47,9 @@ const Navbar = ({
                 )}
                 <div className="flex items-center justify-between w-full h-[38px]">
                     <Title initialData={document}/>
-                    {!document.isArchived && (
-                        <div className="flex items-center gap-x-2">
-                            <Menu documentId={document._id}/>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-x-2">
+                        <Menu documentId={document._id}/>
+                    </div>
                 </div>
             </nav>
             {document.isArchived && (
