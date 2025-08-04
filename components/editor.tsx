@@ -46,6 +46,7 @@ const Editor = ({
   return (
     <BlockNoteView 
       editor={editor} 
+      editable={editable}
       sideMenu={false} 
       theme={resolvedTheme === "dark" ? "dark" : "light"}
       onChange={handleChange}
