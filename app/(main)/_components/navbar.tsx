@@ -9,6 +9,7 @@ import Title from "./title";
 import Banner from "./banner";
 import Menu from "./menu";
 import Publish from "./publish";
+import Export from "./export"
 
 interface NavbarProps {
     isCollapsed: boolean;
@@ -49,6 +50,7 @@ const Navbar = ({
                 <div className="flex items-center justify-between w-full h-[38px]">
                     <Title initialData={document}/>
                     <div className="flex items-center gap-x-2">
+                        <Export title={document.title}/>
                         <Publish initialData={document}/>
                         <Menu documentId={document._id}/>
                     </div>
