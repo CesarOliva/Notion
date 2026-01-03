@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const Export = ({ 
   title 
@@ -87,8 +88,9 @@ const Export = ({
 
       pdf.save(`${title.replace(/\s+/g, '_')}.pdf`);
     } catch (error) {
-      console.error("Error al exportar PDF:", error);
+      toast.error("PDF export failed.");
     } finally {
+      toast.success("PDF exported successfully!");
       setIsExporting(false);
     }
   };
