@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react";
+import { Calendar1, ChevronsLeft, MenuIcon, Plus, PlusCircle, Search, Settings, Trash } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
@@ -120,6 +120,10 @@ const Navigation = () => {
         })
     }
 
+    const redirect = ()=>{
+        router.push('/calendar')
+    }
+
     return (
         <>
             <aside ref={sidebarRef} className={cn(
@@ -141,6 +145,7 @@ const Navigation = () => {
                     <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
                     <Item label="Settings" icon={Settings}onClick={settings.onOpen}/>
                     <Item onClick={handleCreate} label="New Page" icon={PlusCircle}/>
+                    <Item label="Calendar" icon={Calendar1} onClick={redirect}/>
                 </div>
                 <div className="mt-4">
                     <DocumentList/>
