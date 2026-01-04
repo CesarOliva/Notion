@@ -13,5 +13,15 @@ export default defineSchema({
         isPublished: v.boolean()
     })
     .index("by_user", ["userId"])
-    .index("by_user_parent", ["userId", "parentDocument"])
+    .index("by_user_parent", ["userId", "parentDocument"]),
+
+    calendarDates: defineTable({
+        userId: v.string(),
+        date: v.string(),
+        description: v.optional(v.string()),
+        mood: v.optional(v.string()),
+        song: v.optional(v.string()),        
+    })
+    .index("by_user", ["userId"])
+    .index("by_user_date", ["userId", "date"]),
 })

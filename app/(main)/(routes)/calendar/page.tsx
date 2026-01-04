@@ -1,24 +1,33 @@
 'use client';
 
-import { toast } from "sonner";
 import { ContinuousCalendar } from "@/app/(main)/_components/calendar";
+import { api } from "@/convex/_generated/api";
+import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export default function CalendarPage() {
-    //Send to the specified day
-    //Needs a path to the day: [year]/[month]/[day]
-    //Or it can be [year-month-day] or sum
-    //ALSO ADD A TOAST MESSAGE AT EXPORT.TSX  --DONE
-    const onClickHandler = (day: number, month: number, year: number) => {
-        const Message = `Clicked on ${monthNames[month]} ${day}, ${year}`
-        toast.success(Message);
+    const getDate = useMutation(api.calendar.getOrCreate);
+    const router = useRouter();
+
+    const handleGetDate = (day: number, month: number, year: number) => {
+        const dateString = `${year}-${month + 1}-${day}`;
+
+        const promise = getDate({ date: dateString })
+        .then(() => router.push(`/calendar/${dateString}`));
+
+        toast.promise(promise, {
+            loading: "Loading date...",
+            error: "Error loading date",
+        })
     }
 
     return (
         <div className="w-full flex h-screen max-h-screen flex-col gap-4 px-4 pt-4 items-center justify-center">
             <div className="w-full max-w-[1200px] h-full overflow-auto">
-                <ContinuousCalendar onClick={onClickHandler} />
+                <ContinuousCalendar onClick={handleGetDate} />
             </div>
         </div>
     );
