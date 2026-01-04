@@ -125,19 +125,18 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
               data-month={month}
               data-day={day}
               onClick={() => handleDayClick(day, month, year)}
-              className='relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-20 hover:border-neutral-600 sm:-m-px sm:rounded-2xl sm:border-2 lg:rounded-3xl grid grid-cols-7'
-              //className={`relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-20 hover:border-neutral-600 sm:-m-px sm:size-20 sm:rounded-2xl sm:border-2 lg:size-36 lg:rounded-3xl 2xl:size-40 dia`}
+              className='dark:border-neutral-700 relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-20 hover:border-neutral-600 sm:-m-px sm:rounded-2xl sm:border-2 lg:rounded-3xl grid grid-cols-7'
             >
-              <span className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${isToday ? 'bg-neutral-800 font-semibold text-white' : ''} ${month < 0 ? 'text-slate-400' : 'text-slate-800'}`}>
+              <span className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${isToday ? 'bg-neutral-800 dark:bg-neutral-50 font-semibold text-white dark:text-black' : ''} ${month < 0 ? 'text-slate-400 dark:text-slate-400' : 'text-slate-800 dark:text-white'}`}>
                 {day}
               </span>
               {isNewMonth && (
-                <span className="absolute bottom-0.5 left-0 w-full truncate px-1.5 text-sm font-semibold text-slate-500 sm:bottom-0 sm:text-lg lg:bottom-2.5 lg:left-3.5 lg:-mb-1 lg:w-fit lg:px-0 lg:text-xl 2xl:mb-[-4px] 2xl:text-2xl">
+                <span className="absolute bottom-0.5 left-0 w-full truncate px-1.5 text-sm font-semibold text-slate-500 dark:text-slate-200 sm:bottom-0 sm:text-lg lg:bottom-2.5 lg:left-3.5 lg:-mb-1 lg:w-fit lg:px-0 lg:text-xl 2xl:mb-[-4px] 2xl:text-2xl">
                   {monthNames[month]}
                 </span>
               )}
               <button type="button" className="absolute right-2 top-2 rounded-full opacity-0 transition-all focus:opacity-100 group-hover:opacity-100">
-                <svg className="size-8 scale-90 text-neutral-800 transition-all hover:scale-100 group-focus:scale-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="size-8 scale-90 text-neutral-800 dark:text-neutral-200 transition-all hover:scale-100 group-focus:scale-100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4.243a1 1 0 1 0-2 0V11H7.757a1 1 0 1 0 0 2H11v3.243a1 1 0 1 0 2 0V13h3.243a1 1 0 1 0 0-2H13V7.757Z" clipRule="evenodd"/>
                 </svg>
               </button>
@@ -181,8 +180,8 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
   }, []);
 
   return (
-    <div className="no-scrollbar calendar-container max-h-full overflow-y-scroll rounded-t-2xl bg-white pb-10 text-slate-800 shadow-xl">
-      <div className="sticky -top-px z-50 w-full rounded-t-2xl bg-white px-5 pt-7 sm:px-8 sm:pt-8">
+    <div className="no-scrollbar calendar-container max-h-full overflow-y-scroll rounded-t-2xl bg-white dark:bg-[#1F1F1F] pb-10 text-slate-800 dark:text-slate-50 shadow-xl">
+      <div className="sticky -top-px z-50 w-full rounded-t-2xl bg-white dark:bg-[#1F1F1F] px-5 pt-7 sm:px-8 sm:pt-8">
         <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-6">
           <div className="flex flex-wrap gap-2 sm:gap-3">
             <Select name="month" value={`${selectedMonth}`} options={monthOptions} onChange={handleMonthChange} />
@@ -193,24 +192,24 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
           <div className="flex w-fit items-center justify-between">
             <button
               onClick={handlePrevYear}
-              className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2"
+              className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2"
             >
-              <svg className="size-5 text-slate-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <svg className="size-5 text-slate-800 dark:text-slate-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7"/>
               </svg>
             </button>
             <h1 className="min-w-16 text-center text-lg font-semibold sm:min-w-20 sm:text-xl">{year}</h1>
             <button
               onClick={handleNextYear}
-              className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 sm:p-2"
+              className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2"
             >
-              <svg className="size-5 text-slate-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <svg className="size-5 text-slate-800 dark:text-slate-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m9 5 7 7-7 7"/>
               </svg>
             </button>
           </div>
         </div>
-        <div className="grid w-full grid-cols-7 justify-between text-slate-500">
+        <div className="grid w-full grid-cols-7 justify-between text-slate-500 dark:text-white">
           {daysOfWeek.map((day, index) => (
             <div key={index} className="w-full border-b border-slate-200 py-2 text-center font-semibold">
               {day}
@@ -246,7 +245,7 @@ export const Select = ({ name, value, label, options = [], onChange, className }
       name={name}
       value={value}
       onChange={onChange}
-      className="cursor-pointer rounded-lg border border-gray-300 bg-white py-1.5 pl-2 pr-6 text-sm font-medium text-gray-900 hover:bg-gray-100 sm:rounded-xl sm:py-2.5 sm:pl-3 sm:pr-8"
+      className="cursor-pointer rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 dark:text-white py-1.5 pl-2 pr-6 text-sm font-medium text-gray-900 hover:bg-gray-100 sm:rounded-xl sm:py-2.5 sm:pl-3 sm:pr-8"
       required
     >
       {options.map((option) => (
@@ -256,7 +255,7 @@ export const Select = ({ name, value, label, options = [], onChange, className }
       ))}
     </select>
     <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-1 sm:pr-2">
-      <svg className="size-5 text-slate-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <svg className="size-5 text-slate-600 dark:text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
       </svg>
     </span>
