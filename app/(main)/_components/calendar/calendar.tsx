@@ -4,6 +4,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import IconPicker from '@/components/icon-picker';
 import { Smile } from 'lucide-react';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { cn } from '@/lib/utils';
+import { Select } from './select';
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -18,6 +22,22 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
   const [year, setYear] = useState<number>(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState<number>(0);
   const monthOptions = monthNames.map((month, index) => ({ name: month, value: `${index}` }));
+
+  const update = useMutation(api.calendar.update)
+
+  const onMoodSelect = ({
+    day, month, year, mood
+  }: {
+    day: number,
+    month: number,
+    year: number,
+    mood: string,
+  }) => {
+    update({
+      date: `${year}-${month+1}-${day}`,
+      mood: mood,
+    });
+  }
 
   const scrollToDay = (monthIndex: number, dayIndex: number) => {
     const targetDayIndex = dayRefs.current.findIndex(
@@ -129,7 +149,15 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
               onClick={() => handleDayClick(day, month, year)}
               className='relative z-10 m-[-0.5px] group aspect-square w-full grow cursor-pointer rounded-xl border font-medium transition-all hover:z-20 hover:border-neutral-600 sm:-m-px sm:rounded-2xl sm:border-2 lg:rounded-3xl grid grid-cols-7'
             >
-              <span className={`absolute left-1 top-1 flex size-5 items-center justify-center rounded-full text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base ${isToday ? 'bg-neutral-800 dark:bg-neutral-50 font-semibold text-white dark:text-black' : ''} ${month < 0 ? 'text-slate-400 dark:text-slate-400' : 'text-slate-800 dark:text-white'}`}>
+              <span className={cn(
+                  "absolute left-1 top-1 flex items-center justify-center rounded-full size-5 text-xs sm:size-6 sm:text-sm lg:left-2 lg:top-2 lg:size-8 lg:text-base",
+                  month < 0
+                    ? "text-slate-400"
+                    : "text-slate-800 dark:text-white",
+                  isToday &&
+                    "bg-neutral-800 dark:bg-neutral-50 font-semibold text-white dark:text-black"
+                )}
+              >
                 {day}
               </span>
               {isNewMonth && (
@@ -137,7 +165,10 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
                   {monthNames[month]}
                 </span>
               )}
-              <IconPicker onChange={() => {}} asChild>
+              <IconPicker onChange={(mood)=>onMoodSelect({
+                day, month, year, mood,
+              })
+              } asChild>
                   <Button className="absolute right-2 top-2 rounded-full opacity-0 transition-all focus:opacity-100 group-hover:opacity-100 text-xs" size="sm">
                       <Smile className="h-4 w-4"/>
                   </Button>
@@ -225,41 +256,3 @@ export const ContinuousCalendar: React.FC<ContinuousCalendarProps> = ({ onClick 
     </div>
   );
 };
-
-export interface SelectProps {
-  name: string;
-  value: string;
-  label?: string;
-  options: { 'name': string, 'value': string }[];
-  onChange: (_event: React.ChangeEvent<HTMLSelectElement>) => void;
-  className?: string;
-}
-
-export const Select = ({ name, value, label, options = [], onChange, className }: SelectProps) => (
-  <div className={`relative ${className}`}>
-    {label && (
-      <label htmlFor={name} className="mb-2 block font-medium text-slate-800">
-        {label}
-      </label>
-    )}
-    <select
-      id={name}
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="cursor-pointer rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 dark:text-white py-1.5 pl-2 pr-6 text-sm font-medium text-gray-900 hover:bg-gray-100 sm:rounded-xl sm:py-2.5 sm:pl-3 sm:pr-8"
-      required
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.name}
-        </option>
-      ))}
-    </select>
-    <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-1 sm:pr-2">
-      <svg className="size-5 text-slate-600 dark:text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fillRule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clipRule="evenodd" />
-      </svg>
-    </span>
-  </div>
-);

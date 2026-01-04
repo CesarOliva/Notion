@@ -1,6 +1,6 @@
 'use client';
 
-import { ContinuousCalendar } from "@/app/(main)/_components/calendar";
+import { ContinuousCalendar } from "@/app/(main)/_components/calendar/calendar";
 import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
@@ -16,12 +16,12 @@ export default function CalendarPage() {
         const dateString = `${year}-${month + 1}-${day}`;
 
         const promise = getDate({ date: dateString })
-        .then(() => router.push(`/calendar/${dateString}`));
+            // .then(() => router.push(`/calendar/${dateString}`));
 
-        toast.promise(promise, {
-            loading: "Loading date...",
-            error: "Error loading date",
-        })
+        // toast.promise(promise, {
+        //     loading: "Loading date...",
+        //     error: "Error loading date",
+        // })
     }
 
     return (
