@@ -6,22 +6,14 @@ import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
 export default function CalendarPage() {
-    const getDate = useMutation(api.calendar.getOrCreate);
     const router = useRouter();
 
     const handleGetDate = (day: number, month: number, year: number) => {
         const dateString = `${year}-${month + 1}-${day}`;
 
-        const promise = getDate({ date: dateString })
-            // .then(() => router.push(`/calendar/${dateString}`));
-
-        // toast.promise(promise, {
-        //     loading: "Loading date...",
-        //     error: "Error loading date",
-        // })
+        router.push(`/calendar/${dateString}`);
+        toast.success("Redirecting...")
     }
 
     return (
