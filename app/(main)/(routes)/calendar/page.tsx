@@ -10,7 +10,15 @@ export default function CalendarPage() {
     const router = useRouter();
 
     const handleGetDate = (day: number, month: number, year: number) => {
-        const dateString = `${year}-${month + 1}-${day}`;
+        var dayString = day.toString()
+        if(dayString.length < 2){
+            dayString = `0${dayString}`
+        }
+        var monthString = (month+1).toString()
+        if(monthString.length < 2){
+            monthString = `0${monthString}`
+        }
+        const dateString = `${year}-${monthString}-${dayString}`;
 
         router.push(`/calendar/${dateString}`);
         toast.success("Redirecting...")

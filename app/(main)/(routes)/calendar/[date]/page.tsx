@@ -8,6 +8,7 @@ import { Smile, X } from 'lucide-react';
 import { useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Editor from "@/components/editor";
+import { useRouter } from "next/navigation";
 
 const DatePage = ({
     params,
@@ -16,6 +17,7 @@ const DatePage = ({
 }) => {
     let [year, month, day] = params.date.split('-')
 
+    const router = useRouter();
     const get = useMutation(api.calendar.getOrCreate);
     const removeMood = useMutation(api.calendar.removeMood);
     const update = useMutation(api.calendar.update);
@@ -32,6 +34,26 @@ const DatePage = ({
     const dateData = useQuery(api.calendar.getByDate, {
         date: params.date
     })
+
+    const handlePrevDay = () => {
+        const date = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+        date.setDate(date.getDate() - 1)
+
+        const prevYear = date.getFullYear();
+        const prevMonth = String(date.getMonth() + 1).padStart(2, "0");
+        const prevDay = String(date.getDate()).padStart(2, "0");
+        router.push(`${prevYear}-${prevMonth}-${prevDay}`)
+    }
+
+    const handleNextDay = () => {
+        const date = new Date(parseInt(year), parseInt(month)-1, parseInt(day));
+        date.setDate(date.getDate() +1)
+
+        const prevYear = date.getFullYear();
+        const prevMonth = String(date.getMonth() + 1).padStart(2, "0");
+        const prevDay = String(date.getDate()).padStart(2, "0");
+        router.push(`${prevYear}-${prevMonth}-${prevDay}`)
+    }
 
     const onMoodSelect = (mood: string) => {
         update({
@@ -70,23 +92,17 @@ const DatePage = ({
             <div className="w-full max-w-[1200px] h-full overflow-auto px-4">
                 <div className="w-full border-b border-slate-200 py-2 flex justify-between items-center">
                     <div className="flex justify-center items-center gap-x-2">
-                        <button
-                            onClick={()=>{}}
-                            className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2"
-                            >
+                        <button onClick={handlePrevDay} className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2">
                             <svg className="size-4 text-slate-800 dark:text-slate-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 19-7-7 7-7"/>
-                            </svg>
-                            </button>
-                            <h2 className="text-lg font-semibold sm:text-xl">{monthString} {day}, {year}</h2>
-                            <button
-                            onClick={()=>{}}
-                            className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2"
-                            >
+                            </svg>    
+                        </button>
+                        <h2 className="text-lg font-semibold sm:text-xl">{monthString} {day}, {year}</h2>
+                        <button onClick={handleNextDay} className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2" >
                             <svg className="size-4 text-slate-800 dark:text-slate-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m9 5 7 7-7 7"/>
                             </svg>
-                            </button>
+                        </button>
                     </div>
                     {!dateData.mood ? (
                         <IconPicker onChange={onMoodSelect} asChild>                        
@@ -105,7 +121,14 @@ const DatePage = ({
                         </div>
                     )}
                 </div>
-                <Editor onChange={()=>{}} initialContent={''}/>
+                <div className="flex w-full mt-4">
+                    <div className="w-[80%]">
+                        <Editor onChange={()=>{}} initialContent={''}/>
+                    </div>
+                    <div className="w-[20%] border-2 border-slate-300">
+                        Activities
+                    </div>
+                </div>
             </div>
         </section>
     );
