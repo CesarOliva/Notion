@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import IconPicker from '@/components/icon-picker';
-import { Smile, X } from 'lucide-react';
-import { useEffect } from "react";
+import { ChevronRight, Search, Smile, X } from 'lucide-react';
+import { useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import Editor from "@/components/editor";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import SpotifySearch from "@/app/(main)/_components/calendar/spotify";
 
 const DatePage = ({
     params,
@@ -16,6 +17,8 @@ const DatePage = ({
     params: { date:string }
 }) => {
     let [year, month, day] = params.date.split('-')
+
+    const Editor = useMemo(()=>dynamic(()=>import("@/components/editor"), {ssr: false}), [])
 
     const router = useRouter();
     const get = useMutation(api.calendar.getOrCreate);
@@ -65,6 +68,13 @@ const DatePage = ({
     const onRemoveMood = ()=>{
         removeMood({
             date: params.date
+        });
+    }
+
+    const onChange = (content: string) => {
+        update({
+            date: params.date,
+            content
         });
     }
 
@@ -122,11 +132,12 @@ const DatePage = ({
                     )}
                 </div>
                 <div className="flex w-full mt-4">
-                    <div className="w-[80%]">
-                        <Editor onChange={()=>{}} initialContent={''}/>
+                    <div className="w-[70%]">
+                        <Editor onChange={onChange} initialContent={dateData.content}/>
                     </div>
-                    <div className="w-[20%] border-2 border-slate-300">
-                        Activities
+
+                    <div className="w-[30%] p-2 border-2 border-neutral-300 dark:border-neutral-700 rounded-lg flex flex-col h-fit">
+                        <SpotifySearch/>
                     </div>
                 </div>
             </div>

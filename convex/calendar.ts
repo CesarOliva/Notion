@@ -36,7 +36,7 @@ export const getOrCreate = mutation({
 export const update = mutation({
     args: {
         date: v.string(), //as Id
-        description: v.optional(v.string()),
+        content: v.optional(v.string()),
         mood: v.optional(v.string()),
         song: v.optional(v.string()),
     },
