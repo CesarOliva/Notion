@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import IconPicker from '@/components/icon-picker';
-import { ChevronRight, Search, Smile, X } from 'lucide-react';
+import {Smile, X } from 'lucide-react';
 import { useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import SpotifySearch from "@/app/(main)/_components/calendar/spotify";
+import SongItem from "@/app/(main)/_components/calendar/songItem";
 
 const DatePage = ({
     params,
@@ -137,7 +138,11 @@ const DatePage = ({
                     </div>
 
                     <div className="w-[30%] p-2 border-2 border-neutral-300 dark:border-neutral-700 rounded-lg flex flex-col h-fit">
-                        <SpotifySearch/>
+                        {!dateData.song ? ( 
+                            <SpotifySearch date={params.date}/>
+                        ): (
+                            <SongItem name={dateData.song.name} artist={dateData.song.artist} cover={dateData.song.coverUrl} durationMs={dateData.song.durationMs} remove={true}/>
+                        )}
                     </div>
                 </div>
             </div>

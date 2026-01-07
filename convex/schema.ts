@@ -20,7 +20,14 @@ export default defineSchema({
         date: v.string(),
         content: v.optional(v.string()),
         mood: v.optional(v.string()),
-        song: v.optional(v.string()),        
+        song: v.optional(
+            v.object({
+                name: v.string(),
+                artist: v.string(),
+                coverUrl: v.string(),
+                durationMs: v.number(),
+            })
+        ),       
     })
     .index("by_user", ["userId"])
     .index("by_user_date", ["userId", "date"]),

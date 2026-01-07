@@ -1,20 +1,41 @@
 'use client';
 
-import { ChevronRight, Search } from "lucide-react";
+import { api } from "@/convex/_generated/api";
+import { useMutation } from "convex/react";
+import { Search, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import SongItem from "./songItem";
 
-const SpotifySearch = () => {
-    const [cancion, setCancion] = useState('')
-    const [canciones, setCanciones] = useState<any[]>([])
+type songSnapshot = {
+    name: string;
+    artist: string,
+    coverUrl: string,
+    durationMs: number;
+}
+
+const SpotifySearch = ({
+    date,
+}: {
+    date: string
+}) => {
+    const [song, setSong] = useState('')
+    const [songs, setSongs] = useState<any[]>([])
+    const [isSearching, setIsSearching] = useState(false)
+
+    const update = useMutation(api.calendar.update)
 
     function handleSearch(e: any){
         e.preventDefault();
+        setIsSearching(true);
 
-        if(cancion.trim() === '') return;
+        if(song.trim() === ''){
+            setIsSearching(false);
+            return;
+        }
 
-        setCancion('')
-        getSong(cancion)
+        setSong('')
+        getSong(song)
     }
 
     const options = {
@@ -31,19 +52,23 @@ const SpotifySearch = () => {
             const data = await fetch(url, options)
             const res = await data.json()
             console.log(res.tracks.items)
-            setCanciones(res.tracks.items)
+            setSongs(res.tracks.items)
         } catch(error){
             toast.error('An error has occured.')
         }
     }
 
-    const formatDuration = (ms: number) => {
-        const totalSeconds = Math.floor(ms / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
+    const removeList = ()=>{
+        setIsSearching(false);
+    }
 
-        return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-    };
+    const handleSelect = (song: songSnapshot)=>{
+        update({
+            date: date,
+            song
+        });
+        removeList();
+    }
     
     return (
         //add isSearching, setIsSearching to change the submit button.
@@ -51,29 +76,40 @@ const SpotifySearch = () => {
         //show form only when no song is selected
         <>
             <form onSubmit={handleSearch}>
-                <div className="w-full rounded-md py-1 px-2 flex bg-neutral-100 dark:bg-neutral-700">
+                <div className="w-full rounded-md py-1 px-2 flex bg-neutral-100 dark:bg-neutral-700 items-center">
                     <input className="w-full bg-transparent border-none focus:outline-none" 
                         type="text"
-                        value={cancion}
-                        onChange={e => setCancion(e.target.value)}
+                        value={song}
+                        onChange={e => setSong(e.target.value)}
                         placeholder="Select daily song"
                     />
-                    <button type="submit"><Search className="h-4 w-4 mr-1 text-black dark:text-white"/></button>
+                    {!isSearching ? 
+                        <button type="submit"><Search className="h-4 w-4 mr-1 text-black dark:text-white"/></button>
+                    :
+                        <X onClick={removeList} className="h-4 w-4 mr-1 text-black dark:text-white cursor-pointer"/>
+                    } 
+
                 </div>
             </form>
 
-            {canciones.map((cancion, index)=>(
-                <div key={index} className="cursor-pointer flex mt-2 justify-between items-center hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md p-1">
-                    <div className="flex justify-center items-center">
-                        <img className="w-12 h-12 rounded-md border-neutral-700 border" src={cancion.data.albumOfTrack.coverArt.sources[0].url} alt={cancion.data.name}/>
-                        <div className="flex flex-col justify-center text-sm ml-2">
-                            <h3 className="font-semibold">{cancion.data.name}</h3>
-                            <h3 className="text-xs text-neutral-500">{cancion.data.artists.items[0].profile.name} <span>• {formatDuration(cancion.data.duration.totalMilliseconds)}</span></h3>
+                
+            {isSearching && (
+                <>
+                    {songs.map((song, index)=>(
+                        <div 
+                            key={index}
+                            onClick={() => handleSelect({
+                                name: song.data.name,
+                                artist: song.data.artists.items[0].profile.name,
+                                coverUrl: song.data.albumOfTrack.coverArt.sources[0].url,
+                                durationMs: song.data.duration.totalMilliseconds
+                            })}
+                        >
+                            <SongItem name={song.data.name} artist={song.data.artists.items[0].profile.name} cover={song.data.albumOfTrack.coverArt.sources[0].url} durationMs={song.data.duration.totalMilliseconds} remove={false} />
                         </div>
-                    </div>
-                    <ChevronRight className="w-6 h-6"/>
-                </div>
-            ))}
+                    ))}
+                </>
+            )}
         </>
     );
 }

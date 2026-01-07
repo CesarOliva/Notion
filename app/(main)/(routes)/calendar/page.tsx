@@ -1,8 +1,6 @@
 'use client';
 
 import { ContinuousCalendar } from "@/app/(main)/_components/calendar/calendar";
-import { api } from "@/convex/_generated/api";
-import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
