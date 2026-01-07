@@ -7,7 +7,7 @@ import IconPicker from '@/components/icon-picker';
 import {Smile, X } from 'lucide-react';
 import { useEffect, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import SpotifySearch from "@/app/(main)/_components/calendar/spotify";
 import SongItem from "@/app/(main)/_components/calendar/songItem";
@@ -17,7 +17,27 @@ const DatePage = ({
 }:{
     params: { date:string }
 }) => {
-    let [year, month, day] = params.date.split('-')
+    const rawDate = Array.isArray(params.date)
+    ? params.date[0]
+    : params.date;
+
+    const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+    if (!DATE_REGEX.test(rawDate)) {
+        throw new Error("Invalid date format");
+    }
+
+    const [year, month, day] = rawDate.split("-").map(Number);
+
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    if (
+        date.getUTCFullYear() !== year ||
+        date.getUTCMonth() !== month - 1 ||
+        date.getUTCDate() !== day
+    ) {
+        throw new Error("Invalid date format");
+    }
 
     const Editor = useMemo(()=>dynamic(()=>import("@/components/editor"), {ssr: false}), [])
 
@@ -99,9 +119,9 @@ const DatePage = ({
     }
 
     return (
-        <section className="w-full flex h-screen max-h-screen flex-col gap-4 px-4 pt-6 items-center justify-center">
-            <div className="w-full max-w-[1200px] h-full overflow-auto px-4">
-                <div className="w-full border-b border-slate-200 py-2 flex justify-between items-center">
+        <section className="w-full flex h-screen max-h-screen flex-col gap-4 items-center justify-center">
+            <div className="w-full h-full flex flex-col items-center overflow-auto px-4">
+                <div className="pt-6 max-w-[1200px] w-full border-b border-slate-200 py-2 flex justify-between items-center">
                     <div className="flex justify-center items-center gap-x-2">
                         <button onClick={handlePrevDay} className="rounded-full border border-slate-300 p-1 transition-colors hover:bg-slate-100 dark:hover:bg-neutral-700 sm:p-2">
                             <svg className="size-4 text-slate-800 dark:text-slate-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -132,17 +152,42 @@ const DatePage = ({
                         </div>
                     )}
                 </div>
-                <div className="flex w-full mt-4">
-                    <div className="w-[70%]">
+
+                <div className="flex w-full max-w-[1200px] flex-wrap mt-4">
+                    <div className="w-full sm:w-[70%]">
                         <Editor onChange={onChange} initialContent={dateData.content}/>
                     </div>
 
-                    <div className="w-[30%] p-2 border-2 border-neutral-300 dark:border-neutral-700 rounded-lg flex flex-col h-fit">
+                    <div className="w-full sm:w-[30%] mb-12 p-2 border-2 border-neutral-300 dark:border-neutral-700 rounded-lg flex flex-col h-fit">
                         {!dateData.song ? ( 
                             <SpotifySearch date={params.date}/>
                         ): (
                             <SongItem name={dateData.song.name} artist={dateData.song.artist} cover={dateData.song.coverUrl} durationMs={dateData.song.durationMs} remove={true}/>
                         )}
+
+                        <div className="py-2">
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-blue-300/70 text-sm">
+                                💻 Programming
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-red-300/70 text-sm">
+                                📔 Reading
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-neutral-300/70 text-sm">
+                                🎮 Playing
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-green-300/70 text-sm">
+                                🚶 Walking
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-yellow-300/70 text-sm">
+                                🍺 Drinking
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-red-300/70 text-sm">
+                                🍿 Movies
+                            </div>
+                            <div className="m-1 inline-block rounded-md py-1 px-2 bg-pink-300/70 text-sm">
+                                🩷 Sex
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

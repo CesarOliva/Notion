@@ -47,8 +47,10 @@ const Navbar = ({
                 {isCollapsed && (
                     <MenuIcon role="button" onClick={onResetWidth} className="h-6 w-6 text-muted-foreground"/>                   
                 )}
-                <div className="flex items-center justify-between w-full h-[38px]">
-                    <Title initialData={document}/>
+                <div className="flex items-center justify-end sm:justify-between w-full h-[38px]">
+                    <div className="hidden sm:flex">
+                        <Title initialData={document}/>
+                    </div>
                     <div className="flex items-center gap-x-2">
                         <Export title={document.title}/>
                         <Publish initialData={document}/>
