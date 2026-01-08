@@ -28,6 +28,23 @@ select {
   text-overflow: '';
 }
 
+input[type="color"]{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 5px;
+  border: none;
+}
+input[type="color"]::-moz-color-swatch {
+  border-radius: 5px;
+  border: none;
+}
+
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -37,6 +54,12 @@ select {
   .no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+  }
+}
+
+@media (max-width: 768px) {
+  .bn-editor{
+    padding: 0 20px !important;
   }
 }
 
