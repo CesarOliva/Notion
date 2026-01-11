@@ -212,9 +212,42 @@ export const getOrCreateActivity = mutation({
         activities.add(activity!._id);
 
         await ctx.db.patch(day._id, {
-            activities: Array.from(activities),
+            activities: [...(day.activities ?? []), activity!._id],
         });
 
         return activity;
     },
 });
+
+export const getActivities = query({
+    args: {
+        date: v.string()
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+
+        if(!identity){
+            throw new Error("Not authenticated")
+        }
+
+        const userId = identity.subject;
+
+        const date = await ctx.db.query("calendarDates")
+            .withIndex("by_user_date", q =>
+                q.eq("userId", userId).eq("date", args.date)
+            )
+            .first();
+
+        const activities = date?.activities ?? [];
+
+        const activityDetails = await Promise.all(
+            activities.map(activityId => ctx.db.get(activityId))
+        );
+
+        activityDetails.sort((a: any, b: any) =>
+            a.name.localeCompare(b.name)
+        );
+
+        return activityDetails
+    }
+})

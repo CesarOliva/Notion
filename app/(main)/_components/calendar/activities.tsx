@@ -1,8 +1,8 @@
 import { api } from "@/convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Plus, X } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Activities = () => {
     const [isAdding, setIsAdding] = useState(false)
@@ -10,17 +10,21 @@ const Activities = () => {
     const [color, setColor] = useState('#a7a9de')
     const params = useParams()
     
-    const get = useMutation(api.calendar.getOrCreateActivity)
+    const getOrCreateActivity = useMutation(api.calendar.getOrCreateActivity)
+
+    const getActivities = useQuery(api.calendar.getActivities, {
+        date: params.date as string
+    })
 
     const handleCreate = (e: any)=>{
         e.preventDefault();
 
         if(activity.trim() === ''){
-            setIsAdding(true);
+            setIsAdding(false);
             return;
         }
 
-        get({
+        getOrCreateActivity({
             date: params.date as string,
             name: activity,
             color: color
@@ -56,7 +60,7 @@ const Activities = () => {
                             onChange={e => setColor(e.target.value)}                            
                         />
 
-                        {!isAdding ? 
+                        {isAdding && activity.trim() !== '' ? 
                             <button
                                 type="submit" 
                                 className="m-1 flex text-sm items-center cursor-pointer">
@@ -67,33 +71,19 @@ const Activities = () => {
                         } 
                     </form>
                 )}
-        
             </div>
-            
-            {/* <div className="m-1 inline-block rounded-md py-1 px-2 bg-blue-300/70 text-sm">
-                💻 Programming
+
+            <div className="flex flex-wrap">
+                {getActivities?.map((act: any, index) => (
+                    <div 
+                        key={index}
+                        style={{backgroundColor: act.color}}
+                        className="m-1 inline-block rounded-md py-1 px-2 text-sm"
+                    >
+                        {act.name}
+                    </div>
+                ))}
             </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-purple-300/70 text-sm">
-                📔 Reading
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-neutral-300/70 text-sm">
-                🎮 Playing
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-green-300/70 text-sm">
-                🚶 Walking
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-yellow-300/70 text-sm">
-                🍺 Drinking
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-red-300/70 text-sm">
-                🍿 Movies
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-pink-300/70 text-sm">
-                🩷 Sex
-            </div>
-            <div className="m-1 inline-block rounded-md py-1 px-2 bg-neutral-700/70 text-sm">
-                🎧 Music
-            </div>  */}
         </div>
     );
 }

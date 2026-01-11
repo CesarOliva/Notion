@@ -71,9 +71,6 @@ const SpotifySearch = ({
     }
     
     return (
-        //add isSearching, setIsSearching to change the submit button.
-        //add sotd and maybe delete.
-        //show form only when no song is selected
         <>
             <form onSubmit={handleSearch}>
                 <div className="w-full rounded-md py-1 px-2 flex bg-neutral-100 dark:bg-neutral-700 items-center">
