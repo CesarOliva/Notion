@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Notion Clone
 
-## Getting Started
+Proyecto web inspirado en [CodeWithAntonio](https://www.youtube.com/@CodeWithAntonio) de YouTube, construido como una version tipo Notion para crear y organizar notas, navegar entre documentos y llevar un calendario personal.
 
-First, run the development server:
+La base visual y parte de la estructura general toman como referencia ese tutorial, pero la logica del calendario, el registro de moods, la cancion del dia y las actividades del dia fue ideada e implementada por mi.
+
+## Caracteristicas
+
+- Autenticacion con Clerk.
+- Editor de documentos con soporte para contenido enriquecido.
+- Paginas anidadas, portada e icono por documento.
+- Subida de imagenes con EdgeStore.
+- Modo claro y oscuro.
+- Busqueda de documentos.
+- Exportacion y vista previa de documentos.
+- Calendario anual interactivo.
+- Registro por dia de mood.
+- Registro por dia de cancion del dia.
+- Registro por dia de actividades del dia.
+
+## Stack
+
+- Next.js 13
+- React 18
+- TypeScript
+- Tailwind CSS
+- Convex
+- Clerk
+- BlockNote
+- EdgeStore
+
+## Estructura general
+
+- `app/` contiene las rutas y pantallas principales.
+- `components/` contiene componentes reutilizables de UI y modales.
+- `convex/` contiene el esquema y las funciones de backend.
+- `hooks/` contiene hooks personalizados.
+- `lib/` contiene utilidades compartidas.
+
+## Instalacion
+
+1. Instala dependencias:
+
+```bash
+npm install
+```
+
+2. Configura tus variables de entorno.
+
+3. Inicia Convex en una terminal:
+
+```bash
+npx convex dev
+```
+
+4. Inicia la app en otra terminal:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Abre:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Variables de entorno
 
-## Learn More
+Este proyecto usa al menos las siguientes variables en el cliente:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+NEXT_PUBLIC_CONVEX_URL=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Si tu configuracion de Clerk, Convex o EdgeStore requiere variables adicionales, agregalas en tu archivo `.env.local` segun tu entorno.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Scripts
 
-## Deploy on Vercel
+- `npm run dev` - levanta el servidor de desarrollo.
+- `npm run build` - genera la version de produccion.
+- `npm run start` - inicia la app compilada.
+- `npm run lint` - ejecuta ESLint.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Creditos
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Inspirado en el trabajo de CodeWithAntonio, con desarrollo propio en la logica de calendario y registro diario.

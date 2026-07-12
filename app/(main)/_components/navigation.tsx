@@ -139,7 +139,7 @@ const Navigation = () => {
                 <div>
                     <UserItem/>
                     <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
-                    <Item label="Settings" icon={Settings}onClick={settings.onOpen}/>
+                    <Item label="Settings" icon={Settings} onClick={settings.onOpen}/>
                     <Item onClick={handleCreate} label="New Page" icon={PlusCircle}/>
                     <Item label="Calendar" icon={Calendar1} onClick={()=>{router.push('/calendar')}}/>
                 </div>

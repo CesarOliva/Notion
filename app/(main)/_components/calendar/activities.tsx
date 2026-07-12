@@ -2,7 +2,7 @@ import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { Plus, X } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Activities = () => {
     const [isAdding, setIsAdding] = useState(false)
